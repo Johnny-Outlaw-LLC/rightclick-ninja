@@ -1,0 +1,28 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Software\Classes\*\shell\RightClickNinja]
+@="Right Click Ninja"
+"Icon"="C:\\AI Projects\\Projects\\rightclick-ninja\\bin\\RightClickNinja.exe"
+"MultiSelectModel"="Player"
+"Position"="Top"
+
+[HKEY_CURRENT_USER\Software\Classes\*\shell\RightClickNinja\command]
+@="\"C:\\AI Projects\\Projects\\rightclick-ninja\\bin\\RightClickNinja.exe\" \"%1\""
+
+[HKEY_CURRENT_USER\Software\Classes\AllFilesystemObjects\shell\RightClickNinja]
+@="Right Click Ninja"
+"Icon"="C:\\AI Projects\\Projects\\rightclick-ninja\\bin\\RightClickNinja.exe"
+"MultiSelectModel"="Player"
+"Position"="Top"
+
+[HKEY_CURRENT_USER\Software\Classes\AllFilesystemObjects\shell\RightClickNinja\command]
+@="\"C:\\AI Projects\\Projects\\rightclick-ninja\\bin\\RightClickNinja.exe\" \"%1\""
+
+[HKEY_CURRENT_USER\Software\Classes\Directory\shell\RightClickNinja]
+@="Right Click Ninja"
+"Icon"="C:\\AI Projects\\Projects\\rightclick-ninja\\bin\\RightClickNinja.exe"
+"MultiSelectModel"="Player"
+"Position"="Top"
+
+[HKEY_CURRENT_USER\Software\Classes\Directory\shell\RightClickNinja\command]
+@="\"C:\\AI Projects\\Projects\\rightclick-ninja\\bin\\RightClickNinja.exe\" \"%1\""

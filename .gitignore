@@ -1,0 +1,15 @@
+branding/rightclick-ninja-option-*.png
+bin/exiftool_files/
+bin/exiftool.exe
+exiftool/
+sample/
+installer/payload/exiftool_files/
+installer/payload/exiftool.exe
+web/node_modules/
+web/.next/
+web/out/
+*.user
+*.suo
+.DS_Store
+.env
+.env.local

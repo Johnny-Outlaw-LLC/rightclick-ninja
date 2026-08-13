@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="18" fill="#1a1a1a"/>
+  <!-- big shuriken -->
+  <path d="M50 14 L56 38 L80 32 L62 50 L80 68 L56 62 L50 86 L44 62 L20 68 L38 50 L20 32 L44 38 Z" fill="#ff6b35"/>
+  <circle cx="50" cy="50" r="8" fill="#1a1a1a" stroke="#fbf7ee" stroke-width="3"/>
+  <!-- small cursor -->
+  <path d="M66 66 L66 92 L74 84 L80 96 L86 93 L80 81 L90 81 Z" fill="#fbf7ee"/>
+</svg>
