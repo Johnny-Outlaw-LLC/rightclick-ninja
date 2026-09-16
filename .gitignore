@@ -8,8 +8,13 @@ installer/payload/exiftool.exe
 web/node_modules/
 web/.next/
 web/out/
+web/public/downloads/*.zip
 *.user
 *.suo
 .DS_Store
 .env
 .env.local
+mac/.build/
+mac/dist/
+mac/vendor/
+*.xcuserstate
