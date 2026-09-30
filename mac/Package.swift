@@ -8,6 +8,10 @@ let package = Package(
         .executableTarget(
             name: "RightClickNinja",
             path: "Sources/RightClickNinja"
+        ),
+        .executableTarget(
+            name: "RightClickNinjaFinderExtension",
+            path: "Sources/RightClickNinjaFinderExtension"
         )
     ],
     swiftLanguageVersions: [.v5]

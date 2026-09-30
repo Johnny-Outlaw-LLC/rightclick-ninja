@@ -17,12 +17,12 @@ const body = Figtree({
 export const metadata: Metadata = {
   title: "Right Click Ninja",
   description:
-    "Everyday file fixes from Finder and Explorer. Date Shift and screenshots ship first.",
+    "Change file dates or take screenshots directly from Finder's right-click menu.",
   metadataBase: new URL("https://rightclick.ninja"),
   openGraph: {
     title: "Right Click Ninja",
     description:
-      "Everyday file fixes from Finder and Explorer. Date Shift and screenshots ship first.",
+      "Change file dates or take screenshots directly from Finder's right-click menu.",
     url: "https://rightclick.ninja",
     siteName: "Right Click Ninja",
     type: "website",

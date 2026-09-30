@@ -17,7 +17,7 @@ Installer output: `installer\dist\RightClickNinja-Setup-*.exe`
 
 ## Desktop app (macOS)
 
-Native menu-bar app (macOS 14+): Date Shift from Finder's Services menu, plus Blue Shot-style region/full-screen capture with copy, save, and an annotation editor.
+Native menu-bar app (macOS 14+): **Change Date…** and **Take Screenshot** directly in Finder's right-click menu, plus Blue Shot-style region/full-screen capture with copy, save, and an annotation editor.
 
 ```bash
 cd mac
@@ -38,7 +38,7 @@ Release builds sign with a Developer ID Application certificate, notarize (profi
 
 Shortcuts: Print Screen / F13, or ⌃⇧⌘4 (region) and ⌃⇧⌘3 (full screen). If BlueShot is also running, one of them will fail to claim F13 — quit the other app.
 
-Finder: select files → right-click → **Services → Date Shift with Right Click Ninja**. Launch the app once after install so Launch Services registers the item.
+Finder: launch the app once after install and approve **Right Click Ninja Finder Menu** when macOS opens Extensions settings. Then select files → right-click → **Change Date…**, or right-click in a Finder window → **Take Screenshot**. The original Services action remains available as a fallback.
 
 ## Website
 

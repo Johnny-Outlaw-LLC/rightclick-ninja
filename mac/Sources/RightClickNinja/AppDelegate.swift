@@ -1,4 +1,5 @@
 import AppKit
+import FinderSync
 import UniformTypeIdentifiers
 
 @MainActor
@@ -19,6 +20,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         hotKeys.registerAll()
         setupStatusItem()
+        offerFinderMenuSetupIfNeeded()
 
         if ScreenCapturer.isTranslocated {
             DispatchQueue.main.async { ScreenCapturer.presentTranslocationAlert() }
@@ -41,8 +43,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func application(_ application: NSApplication, open urls: [URL]) {
-        DateShiftWindowController.shared.importPaths(urls.map(\.path))
-        DateShiftWindowController.shared.showWindow()
+        handleIncomingURLs(urls)
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
@@ -98,6 +99,22 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         menu.addItem(.separator())
 
+        let finderMenu = NSMenuItem(
+            title: FIFinderSyncController.isExtensionEnabled
+                ? "Finder Right-Click Menu: On"
+                : "Enable Finder Right-Click Menu…",
+            action: FIFinderSyncController.isExtensionEnabled ? nil : #selector(manageFinderMenu),
+            keyEquivalent: ""
+        )
+        finderMenu.target = self
+        menu.addItem(finderMenu)
+
+        let manageFinderMenu = NSMenuItem(title: "Manage Finder Extension…", action: #selector(manageFinderMenu), keyEquivalent: "")
+        manageFinderMenu.target = self
+        menu.addItem(manageFinderMenu)
+
+        menu.addItem(.separator())
+
         let hintTitle = hotKeys.printScreenAvailable
             ? "Shortcut: Print Screen (F13)  ·  ⌃⇧⌘4"
             : "Shortcut: ⌃⇧⌘4  ·  Print Screen (F13) is taken by another app"
@@ -149,5 +166,56 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         ScreenCapturer.openScreenRecordingSettings()
     }
 
+    @objc private func manageFinderMenu() {
+        FIFinderSyncController.showExtensionManagementInterface()
+    }
+
     @objc private func quit() { NSApp.terminate(nil) }
+
+    private func handleIncomingURLs(_ urls: [URL]) {
+        let actionURLs = urls.filter { $0.scheme == "rightclickninja" }
+        let fileURLs = urls.filter(\.isFileURL)
+
+        for url in actionURLs {
+            switch url.host {
+            case "change-date":
+                let paths = URLComponents(url: url, resolvingAgainstBaseURL: false)?
+                    .queryItems?
+                    .filter { $0.name == "path" }
+                    .compactMap(\.value) ?? []
+                guard !paths.isEmpty else { continue }
+                DateShiftWindowController.shared.importPaths(paths)
+                DateShiftWindowController.shared.showWindow()
+            case "take-screenshot":
+                CaptureController.shared.startRegionCapture()
+            default:
+                continue
+            }
+        }
+
+        if !fileURLs.isEmpty {
+            DateShiftWindowController.shared.importPaths(fileURLs.map(\.path))
+            DateShiftWindowController.shared.showWindow()
+        }
+    }
+
+    private func offerFinderMenuSetupIfNeeded() {
+        guard !FIFinderSyncController.isExtensionEnabled else { return }
+
+        let key = "didOfferFinderRightClickMenu"
+        guard !UserDefaults.standard.bool(forKey: key) else { return }
+        UserDefaults.standard.set(true, forKey: key)
+
+        DispatchQueue.main.async {
+            let alert = NSAlert()
+            alert.messageText = "Turn on the Finder right-click menu"
+            alert.informativeText = "Enable Right Click Ninja once in Extensions to add Change Date and Take Screenshot directly to Finder's right-click menu."
+            alert.addButton(withTitle: "Open Extensions")
+            alert.addButton(withTitle: "Later")
+            NSApp.activate(ignoringOtherApps: true)
+            if alert.runModal() == .alertFirstButtonReturn {
+                FIFinderSyncController.showExtensionManagementInterface()
+            }
+        }
+    }
 }

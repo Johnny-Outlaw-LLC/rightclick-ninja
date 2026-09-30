@@ -25,7 +25,8 @@ export default function Home() {
             <h1 className="headline">File fixes. One right-click.</h1>
             <p className="lede">
               Everyday Finder and Explorer tools that stay out of your way.
-              Date Shift and screenshots are ready today. More are on the way.
+              Change dates or take a screenshot directly from Finder's
+              right-click menu. More tools are on the way.
             </p>
 
             <div className="cta-row">
@@ -37,7 +38,7 @@ export default function Home() {
               </a>
             </div>
             <p className="meta">
-              Free · macOS 14+ · Windows 10 and 11 · Installer, about 10–20 MB
+              Free · macOS 14+ · Windows 10 and 11 · Mac installer, about 6 MB
             </p>
           </div>
 
@@ -56,16 +57,16 @@ export default function Home() {
         <section className="section" id="how">
           <h2>From the menu you already use</h2>
           <p>
-            Select files, open the right-click menu, and launch Right Click
-            Ninja. No separate workflow to learn.
+            Select files, open the right-click menu, and pick a tool. No
+            separate workflow to learn.
           </p>
           <div className="steps">
             <div className="step">
               <div>
                 <h3>Install once</h3>
                 <p>
-                  Mac: run the package into Applications. Windows: run setup
-                  and optionally wire Explorer.
+                  Mac: run the package, launch once, and enable the Finder menu
+                  when prompted. Windows: run setup and optionally wire Explorer.
                 </p>
               </div>
             </div>
@@ -80,12 +81,11 @@ export default function Home() {
             </div>
             <div className="step">
               <div>
-                <h3>Right-click → Right Click Ninja</h3>
+                <h3>Right-click → pick a tool</h3>
                 <p>
-                  Mac: Services → Date Shift with Right Click Ninja (enable it
-                  once under Keyboard Shortcuts › Services if it is missing).
-                  Windows 11: Show more options → Right Click Ninja. Then dial
-                  the offset and apply.
+                  Mac: choose Change Date… or Take Screenshot directly in
+                  Finder. Windows 11: Show more options → Right Click Ninja.
+                  Then dial the offset and apply.
                 </p>
               </div>
             </div>
@@ -122,7 +122,8 @@ export default function Home() {
               <p>
                 Print Screen for Mac, built in. Capture a region or the full
                 display, then copy, save, or mark it up — the same Blue Shot
-                workflow, from the Right Click Ninja menu bar.
+                workflow, from Finder's right-click menu or the Right Click
+                Ninja menu bar.
               </p>
             </div>
             <div className="feature-panel">

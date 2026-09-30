@@ -21,7 +21,11 @@ ROOT="$(pwd)"
 APP="$ROOT/dist/RightClickNinja.app"
 CONFIG="${1:-release}"
 NOTARY_PROFILE="${RCN_NOTARY_PROFILE:-blueshot-notary}"
-ZIP="$ROOT/../web/public/downloads/RightClickNinja-Mac.zip"
+if [ "$CONFIG" = "release" ]; then
+  ZIP="$ROOT/../web/public/downloads/RightClickNinja-Mac.zip"
+else
+  ZIP="$ROOT/dist/RightClickNinja-Mac.zip"
+fi
 PKG="$ROOT/dist/RightClickNinja.pkg"
 PKG_DEST="$ROOT/../web/public/downloads/RightClickNinja-Mac.pkg"
 VERSION="$(plutil -extract CFBundleShortVersionString raw "$ROOT/Resources/Info.plist")"
@@ -30,6 +34,7 @@ EXIFTOOL_VERSION="${RCN_EXIFTOOL_VERSION:-13.59}"
 echo "==> Compiling ($CONFIG)"
 swift build -c "$CONFIG"
 BIN="$(swift build -c "$CONFIG" --show-bin-path)/RightClickNinja"
+FINDER_BIN="$(swift build -c "$CONFIG" --show-bin-path)/RightClickNinjaFinderExtension"
 
 echo "==> ExifTool"
 VENDOR="$ROOT/vendor/Image-ExifTool-$EXIFTOOL_VERSION"
@@ -47,15 +52,17 @@ fi
 
 echo "==> Assembling bundle"
 rm -rf "$APP"
-mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources/exiftool"
+FINDER_APP="$APP/Contents/PlugIns/RightClickNinjaFinder.appex"
+mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources/exiftool" "$FINDER_APP/Contents/MacOS"
 cp "$BIN" "$APP/Contents/MacOS/RightClickNinja"
 cp "$ROOT/Resources/Info.plist" "$APP/Contents/Info.plist"
+cp "$FINDER_BIN" "$FINDER_APP/Contents/MacOS/RightClickNinjaFinderExtension"
+cp "$ROOT/Resources/FinderExtension-Info.plist" "$FINDER_APP/Contents/Info.plist"
 printf 'APPL????' > "$APP/Contents/PkgInfo"
-rsync -a --delete "$VENDOR/exiftool" "$VENDOR/lib" "$VENDOR/README" "$VENDOR/LICENSE" \
-  "$APP/Contents/Resources/exiftool/" 2>/dev/null || {
-  cp "$VENDOR/exiftool" "$APP/Contents/Resources/exiftool/exiftool"
-  cp -R "$VENDOR/lib" "$APP/Contents/Resources/exiftool/lib"
-}
+cp "$VENDOR/exiftool" "$APP/Contents/Resources/exiftool/exiftool"
+cp "$VENDOR/README" "$APP/Contents/Resources/exiftool/README"
+mkdir -p "$APP/Contents/Resources/exiftool/lib"
+rsync -a --delete "$VENDOR/lib/" "$APP/Contents/Resources/exiftool/lib/"
 chmod +x "$APP/Contents/Resources/exiftool/exiftool"
 
 echo "==> Icon"
@@ -78,15 +85,19 @@ fi
 NOTARIZED=0
 if [ "$CONFIG" != "release" ]; then
   echo "==> Signing (ad-hoc debug build)"
+  codesign --force --sign - --entitlements "$ROOT/Resources/FinderExtension.entitlements" "$FINDER_APP"
   codesign --force --sign - "$APP"
 elif [ -n "$IDENTITY" ]; then
   echo "==> Signing ($IDENTITY)"
+  codesign --force --options runtime --timestamp \
+    --entitlements "$ROOT/Resources/FinderExtension.entitlements" \
+    --sign "$IDENTITY" "$FINDER_APP"
   codesign --force --options runtime --timestamp \
     --sign "$IDENTITY" "$APP/Contents/MacOS/RightClickNinja"
   # ExifTool is a perl tree; sign the launcher script's container by signing the app.
   codesign --force --options runtime --timestamp \
     --sign "$IDENTITY" "$APP"
-  codesign --verify --strict --verbose=2 "$APP"
+  codesign --verify --deep --strict --verbose=2 "$APP"
 
   if [ "${RCN_SKIP_NOTARIZE:-0}" = "1" ]; then
     echo "==> Notarizing (skipped: RCN_SKIP_NOTARIZE=1)"
@@ -163,7 +174,9 @@ else
 fi
 
 mkdir -p "$(dirname "$PKG_DEST")"
-cp -f "$PKG" "$PKG_DEST"
+if [ "$CONFIG" = "release" ]; then
+  cp -f "$PKG" "$PKG_DEST"
+fi
 
 echo
 echo "Built: $APP"
